@@ -2,13 +2,13 @@
 
 require_once(__DIR__ . "/../conexao/Conexao.php");
 
-class Produto{
+class Registro{
 
-    public static function addProduto($nome, $qtdEstoque, $preco, $descricao){
+    public static function addRegistro($idCompra, $idProduto, $qtdProduto){
         try{
             $connetion = Conexao::getConexao();
-            $stmt = $connetion->prepare("INSERT INTO produto(nome, qtdEstoque, preco, descricao) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$nome, $qtdEstoque, $preco, $descricao]);
+            $stmt = $connetion->prepare("INSERT INTO produto_compra(idCompra, idProduto, qtdProduto) VALUES (?, ?, ?)");
+            $stmt->execute([$idCompra, $idProduto, $qtdProduto]);
             if ($stmt->rowCount() > 0) {
                 return true;
             } else {
@@ -23,31 +23,8 @@ class Produto{
     {
         try {
             $conexao = Conexao::getConexao();
-            $stmt = $conexao->prepare("DELETE FROM produto WHERE id = ?");
+            $stmt = $conexao->prepare("DELETE FROM produto_compra WHERE id = ?");
             $stmt->execute([$id]);
-
-            if ($stmt->rowCount() > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            exit;
-        }
-    }
-    public static function editar($id, $nome, $qtdEstoque, $preco, $descricao)
-    {
-        try {
-            $conexao = Conexao::getConexao();
-            $stmt = $conexao->prepare("UPDATE produto SET nome = :p1, qtdEstoque = :p2, preco = :p3, descricao = :p4 WHERE id = :p5");
-            $stmt->execute([
-                "p1" => $nome,
-                "p2" => $qtdEstoque,
-                "p3" => $preco,
-                "p4" => $descricao,
-                "p5" => $id
-            ]);
 
             if ($stmt->rowCount() > 0) {
                 return true;
@@ -63,7 +40,7 @@ class Produto{
     {
         try {
             $conexao = Conexao::getConexao();
-            $stmt = $conexao->prepare("SELECT * FROM produto ORDER BY id");
+            $stmt = $conexao->prepare("SELECT * FROM produto_compra ORDER BY id");
             $stmt->execute();
 
             return $stmt->fetchAll();
@@ -89,7 +66,7 @@ class Produto{
             exit;
         }
     }
-    public static function getProduto($id)
+    public static function getRegistro($id)
     {
         try {
             $conexao = Conexao::getConexao();
